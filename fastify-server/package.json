@@ -1,8 +1,8 @@
 {
-  "name": "fastify-boilerplate",
-  "version": "2.4.41",
-  "description": "A Fastify template that follows the Clean Architecture principles and encourages established practices.",
-  "author": "Marco Turi <marco.turi@hotmail.it>",
+  "name": "mini-campaigns-server",
+  "version": "1.0.0",
+  "description": "A Fastify server for the mini campaigns project",
+  "author": "Hieu tran <hieutran.dev@gmail.com>",
   "license": "MIT",
   "type": "module",
   "imports": {

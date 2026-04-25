@@ -22,3 +22,23 @@ lerna-debug.log*
 # temp directory
 .temp
 .tmp
+
+# dependencies
+.dependency-cruiser.cjs
+doc/dependency-graph.svg
+
+# coverage
+coverage/
+
+# logs
+logs/
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# agents
+.cursor/
+.claude/
