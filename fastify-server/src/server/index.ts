@@ -1,0 +1,67 @@
+import path from 'node:path';
+import AutoLoad from '@fastify/autoload';
+import Cors from '@fastify/cors';
+import Helmet from '@fastify/helmet';
+import type { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
+import UnderPressure from '@fastify/under-pressure';
+import type { FastifyInstance } from 'fastify';
+import mercurius from 'mercurius';
+import env from '#src/config/env.ts';
+import appModule from '#src/modules/app-module.ts';
+import { di } from '#src/server/di/index.ts';
+import getGQL from '#src/server/plugins/gql.ts';
+
+export default async function createServer(fastify: FastifyInstance) {
+  // Graphql
+  await fastify.register(mercurius, {
+    schema: await getGQL(),
+    graphiql: env.isDevelopment,
+    defineMutation: true,
+  });
+
+  // Set sensible default security headers
+  await fastify.register(Helmet, {
+    global: true,
+    // The following settings are needed for graphiql, see https://github.com/graphql/graphql-playground/issues/1283
+    contentSecurityPolicy: !env.isDevelopment,
+    crossOriginEmbedderPolicy: !env.isDevelopment,
+  });
+
+  // Enables the use of CORS in a Fastify application.
+  // https://en.wikipedia.org/wiki/Cross-origin_resource_sharing
+  // `origin: false` disables CORS headers entirely (suitable for same-origin / server-to-server).
+  // Set to `true` or a specific origin string/array for cross-origin frontends.
+  await fastify.register(Cors, {
+    origin: false,
+  });
+
+  // Auto-load plugins
+  await fastify.register(AutoLoad, {
+    dir: path.join(import.meta.dirname, 'plugins'),
+    dirNameRoutePrefix: false,
+  });
+
+  // Configure Dependency Injection
+  await di(fastify);
+
+  // Register app module routes/resolvers manually
+  await fastify.register(appModule, {
+    prefix: '/api',
+  });
+
+  /**
+   * Health check plugin to check if the server is overloaded
+   * if the server is overloaded:
+   * -> the server will return a 503 status code (Service Unavailable)
+   */
+  await fastify.register(UnderPressure, {
+    healthCheck: async () => true,
+    healthCheckInterval: 5000,
+    exposeStatusRoute: {
+      routeOpts: { logLevel: 'silent' },
+      url: '/health',
+    },
+  });
+
+  return fastify.withTypeProvider<TypeBoxTypeProvider>();
+}
