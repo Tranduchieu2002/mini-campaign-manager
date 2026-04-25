@@ -1,16 +1,14 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import userDomain from './user.domain.ts';
-import { UserRoles } from './user.types.ts';
 
 describe('userDomain()', () => {
   it('should return a new user entity', () => {
     const user = userDomain().createUser({
       email: 'test@test.it',
-      country: 'Italy',
-      postalCode: '12345',
-      street: 'Via Roma',
+      name: 'Test User',
     });
-    assert.equal(user.role, UserRoles.guest);
+    assert.equal(user.email, 'test@test.it');
+    assert.equal(user.name, 'Test User');
   });
 });

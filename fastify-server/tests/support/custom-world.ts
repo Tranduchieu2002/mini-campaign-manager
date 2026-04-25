@@ -1,7 +1,7 @@
 import { type IWorldOptions, setWorldConstructor, World } from '@cucumber/cucumber';
 import type * as messages from '@cucumber/messages';
 import type { FastifyInstance, LightMyRequestResponse } from 'fastify';
-import type postgres from 'postgres';
+import * as postgres from 'postgres';
 
 export interface TestContext {
   createUserDto?: Record<string, string>;
@@ -14,7 +14,7 @@ export interface ICustomWorld extends World {
   feature?: messages.Pickle;
   testName?: string;
   startTime?: Date;
-  db: ReturnType<typeof postgres>;
+  db: postgres.Sql;
   server: FastifyInstance;
   context: TestContext;
 }
@@ -27,7 +27,7 @@ export class CustomWorld extends World implements ICustomWorld {
 
   debug = false;
   server = undefined as unknown as FastifyInstance;
-  db = undefined as unknown as ReturnType<typeof postgres>;
+  db = undefined as unknown as postgres.Sql;
   context: TestContext = {};
 }
 

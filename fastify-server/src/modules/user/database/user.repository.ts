@@ -1,9 +1,13 @@
 import { type Static, Type } from 'typebox';
+import {
+  MAX_LENGTH_NAME,
+  MIN_LENGTH_NAME,
+} from '#src/modules/user/commands/create-user/create-user.schema.ts';
 import type {
   UserFilters,
   UserRepository,
 } from '#src/modules/user/database/user.repository.port.ts';
-import { type UserEntity, UserRoles } from '#src/modules/user/domain/user.types.ts';
+import type { UserEntity } from '#src/modules/user/domain/user.types.ts';
 import { joinConditions } from '#src/shared/db/postgres.ts';
 import type { Paginated, PaginatedQueryParams } from '#src/shared/db/repository.port.ts';
 
@@ -12,10 +16,7 @@ export const userSchema = Type.Object({
   createdAt: Type.String({ format: 'date-time' }),
   updatedAt: Type.String({ format: 'date-time' }),
   email: Type.String({ format: 'email' }),
-  country: Type.String({ minLength: 1, maxLength: 255 }),
-  postalCode: Type.String({ minLength: 1, maxLength: 20 }),
-  street: Type.String({ minLength: 1, maxLength: 255 }),
-  role: Type.Enum(UserRoles),
+  name: Type.String({ minLength: MIN_LENGTH_NAME, maxLength: MAX_LENGTH_NAME }),
 });
 export type UserModel = Static<typeof userSchema>;
 
@@ -38,11 +39,7 @@ export default function userRepository({
       params: PaginatedQueryParams,
       filters: UserFilters,
     ): Promise<Paginated<UserEntity>> {
-      const conditions = [
-        filters.country && db`country = ${filters.country}`,
-        filters.street && db`street = ${filters.street}`,
-        filters.postalCode && db`"postalCode" = ${filters.postalCode}`,
-      ];
+      const conditions = [filters.name && db`name = ${filters.name}`];
       const users: { rows: UserModel[]; count: number }[] = await db`
         SELECT
           (SELECT COUNT(*) FROM users ${joinConditions(conditions)}) as count,

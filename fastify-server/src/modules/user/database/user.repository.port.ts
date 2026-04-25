@@ -6,9 +6,7 @@ import type {
 } from '#src/shared/db/repository.port.ts';
 
 export interface UserFilters {
-  country?: string;
-  postalCode?: string;
-  street?: string;
+  name?: string;
 }
 
 export interface UserRepository extends RepositoryPort<UserEntity> {

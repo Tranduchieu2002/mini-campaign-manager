@@ -14,15 +14,13 @@ export default function userMapper(): Mapper<UserEntity, UserModel, UserResponse
         createdAt: new Date(record.createdAt),
         updatedAt: new Date(record.updatedAt),
         email: record.email,
-        role: record.role,
-        street: record.street,
-        postalCode: record.postalCode,
-        country: record.country,
+        name: record.name,
       };
     },
     toResponse(entity: UserEntity): UserResponseDto {
       return {
         ...entity,
+
         updatedAt: entity.updatedAt.toISOString(),
         createdAt: entity.createdAt.toISOString(),
       };
@@ -33,10 +31,7 @@ export default function userMapper(): Mapper<UserEntity, UserModel, UserResponse
         createdAt: user.createdAt.toISOString(),
         updatedAt: user.updatedAt.toISOString(),
         email: user.email,
-        country: user.country,
-        postalCode: user.postalCode,
-        street: user.street,
-        role: user.role,
+        name: user.name,
       };
       const validate = persistenceValidator(record);
       if (!validate) {

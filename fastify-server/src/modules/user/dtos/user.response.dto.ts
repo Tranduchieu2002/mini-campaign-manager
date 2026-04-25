@@ -9,21 +9,9 @@ export const userResponseDtoSchema = Type.Intersect([
       format: 'email',
       description: "User's email address",
     }),
-    country: Type.String({
-      example: 'France',
-      description: "User's country of residence",
-    }),
-    postalCode: Type.String({
-      example: '123456',
-      description: 'Postal code',
-    }),
-    street: Type.String({
-      example: 'Park Avenue',
-      description: 'Street where the user is registered',
-    }),
-    role: Type.Union([Type.Literal('admin'), Type.Literal('moderator'), Type.Literal('guest')], {
-      example: 'guest',
-      description: "User's role",
+    name: Type.String({
+      example: 'John Doe',
+      description: "User's name",
     }),
   }),
 ]);

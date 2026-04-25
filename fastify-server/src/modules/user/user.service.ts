@@ -6,9 +6,7 @@ import { ConflictException, NotFoundException } from '#src/shared/exceptions/ind
 import type { CreateUserRequestDto } from './commands/create-user/create-user.schema.ts';
 
 export type FindUsersParams = Partial<PaginatedQueryParams> & {
-  country?: string;
-  postalCode?: string;
-  street?: string;
+  name?: string;
 };
 
 export default function userService({ userRepository, userDomain }: Dependencies) {
@@ -37,9 +35,7 @@ export default function userService({ userRepository, userDomain }: Dependencies
     async findUsers(params: FindUsersParams): Promise<Paginated<UserEntity>> {
       const query = paginatedQueryBase(params);
       return userRepository.findAllPaginatedFiltered(query, {
-        country: params.country,
-        postalCode: params.postalCode,
-        street: params.street,
+        name: params.name,
       });
     },
   };
